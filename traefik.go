@@ -183,7 +183,11 @@ func ToMiddleware(domain string, bookmark *Bookmark) map[string]*Middleware {
 
 func (h *TraefikHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(h.config)
+	err := json.NewEncoder(w).Encode(struct {
+		Http HTTPConfiguration `json:"http"`
+	}{
+		Http: h.config,
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
